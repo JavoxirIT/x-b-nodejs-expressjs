@@ -85,7 +85,7 @@ exports.addPayAndUpdateContract = async (req, res) => {
             date,
             1
         );
-        return result;
+        return res.status(201).json(result);
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }

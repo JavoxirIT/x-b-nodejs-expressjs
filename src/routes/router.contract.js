@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const upload = require('../middleware/upload');
 
 router.post(
-    'contracts',
+    '/',
     authMiddleware,
     upload.array('images', 10),
     contractController.createContract

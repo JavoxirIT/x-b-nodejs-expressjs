@@ -126,7 +126,7 @@ exports.addPayAndUpdateContract = async (id, pay, date, fValue) => {
         };
     } catch (err) {
         await connection.rollback();
-        throw new Error('Aamallar bajarilmadi');
+        throw new Error(`Aamallar bajarilmadi ${err}`);
     } finally {
         connection.release();
     }

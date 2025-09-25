@@ -6,7 +6,6 @@ const authRoutes = require('./routes/auth.router');
 const contractRoutes = require('./routes/router.contract');
 const notesRoutes = require('./routes/notes.router');
 const cookieParser = require('cookie-parser');
-
 const app = express();
 
 app.use(express.json());

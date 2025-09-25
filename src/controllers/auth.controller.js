@@ -141,8 +141,33 @@ exports.register = async (req, res) => {
             refreshToken,
         });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: 'Serverda xatolik' });
+    }
+};
+
+exports.passwordAndLoginchange = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ message: "Ma'lumotlar to'liq emas" });
+        }
+        const [isThereUser] = await db.query(
+            'SELECT id FROM users WHERE id=?',
+            [id]
+        );
+        console.log(isThereUser);
+        if (isThereUser.length == 0) {
+            res.status(404).json({ massage: 'Fotdalanuvchi topilmadi' });
+        }
+
+        const result = await authService.changeData(username, password, id);
+        if (result.affectedRows) {
+            res.status(201).json({ message: 'Muvofaqiyatli' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.json(error);
     }
 };
 

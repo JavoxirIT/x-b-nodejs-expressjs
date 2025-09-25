@@ -81,16 +81,16 @@ exports.updateFinally = async (id, param) => {
     return rows;
 };
 //
-exports.insertPay = async (id, pay, date, con = db) => {
+exports.insertPay = async (id, pay, d, con) => {
     const [result] = await con.query(
-        `INSERT INTO payments (contract_id, pay, date) VALUES (?, ?, ?)`,
-        [id, pay, date]
+        `INSERT INTO payments (contract_id, pay, \`date\`) VALUES (?, ?, ?)`,
+        [id, pay, d]
     );
 
     return result;
 };
 
-exports.updateNextPayment = async (pay, id, pay2, con = db) => {
+exports.updateNextPayment = async (pay, id, pay2, con) => {
     const [contractUpdate] = await con.query(
         `UPDATE contract
 			SET next_payment = next_payment + ?
@@ -102,7 +102,7 @@ exports.updateNextPayment = async (pay, id, pay2, con = db) => {
     return contractUpdate;
 };
 
-exports.updateFinallyElse = async (fValue, id, con = db) => {
+exports.updateFinallyElse = async (fValue, id, con) => {
     const [updateFinaly] = await con.query(
         `UPDATE contract
          SET finaly = ?
