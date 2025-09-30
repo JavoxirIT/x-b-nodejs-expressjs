@@ -23,6 +23,20 @@ exports.createContract = async (data, files) => {
     }
 };
 
+exports.updateContarct = async (d, files, conId) => {
+    const result = await contractModel.update(d, conId);
+
+    if (files && files.length > 0) {
+        const values = files.map(file => [conId, file.filename]);
+        await contractModel.insertFile(values);
+    }
+
+    if (result.affectedRows === 0) {
+        throw new Error("Ma'lumotlar yangilanmadi");
+    }
+    return result.affectedRows;
+};
+
 exports.readContract = async value => {
     const rows = await contractModel.readAll(value);
 
@@ -99,7 +113,7 @@ exports.addPayAndUpdateContract = async (id, pay, date, fValue) => {
 
         if (updateNextPayemt.affectedRows === 0) {
             throw new Error(
-                `Xato: summa ruxsat etilgan chegaradan oshib ketdi yoki №${id} shartnomasi topilmadi`
+                `Kiritilgan summa ${pay} qolgan summadan ko'p yoki №${id} shartnomasi topilmadi`
             );
         }
         const result = await contractModel.insertPay(id, pay, date, connection);
@@ -126,7 +140,7 @@ exports.addPayAndUpdateContract = async (id, pay, date, fValue) => {
         };
     } catch (err) {
         await connection.rollback();
-        throw new Error(`Aamallar bajarilmadi ${err}`);
+        throw err;
     } finally {
         connection.release();
     }

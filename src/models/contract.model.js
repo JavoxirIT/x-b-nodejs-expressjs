@@ -32,6 +32,25 @@ exports.create = async (
     return result;
 };
 
+exports.update = async (d, conId) => {
+    const [result] = await db.query(
+        `UPDATE contract 
+		 SET name=?, avto_info=?, start_date=?, end_date=?, price=?, added_anmount=?, first_payment=? 
+		 WHERE id=? AND finaly=0`,
+        [
+            d.clientName,
+            d.avto,
+            d.startDate,
+            d.endDate,
+            d.price,
+            d.addedAnmount,
+            d.firstPayment,
+            conId,
+        ]
+    );
+    return result;
+};
+
 exports.insertFile = async (values, con = db) => {
     const [result] = await con.query(
         'INSERT INTO contract_images (contract_id, image_path) VALUES ?',

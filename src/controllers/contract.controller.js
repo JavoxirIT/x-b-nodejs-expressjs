@@ -5,15 +5,25 @@ const contractService = require('../services/contract.service');
 
 //TODO записать один
 exports.createContract = async (req, res) => {
-    const files = req.files; // массив файлов
+    let result;
+    const files = req.files;
+    const contarctId = parseInt(req.query.id ?? 0);
     try {
-        const result = await contractService.createContract(
-            {
-                userId: req.user.id,
-                ...req.body,
-            },
-            files
-        );
+        if (contarctId) {
+            result = await contractService.updateContarct(
+                req.body,
+                files,
+                contarctId
+            );
+        } else {
+            result = await contractService.createContract(
+                {
+                    userId: req.user.id,
+                    ...req.body,
+                },
+                files
+            );
+        }
 
         if (!result) {
             return res.status(400).json({
@@ -25,7 +35,7 @@ exports.createContract = async (req, res) => {
             message: 'Ma`lumot saqlandi',
         });
     } catch (err) {
-        res.status(500).json({
+        res.status(400).json({
             message: 'Xatolik yuz berdi',
             error: err.message,
         });
@@ -87,7 +97,7 @@ exports.addPayAndUpdateContract = async (req, res) => {
         );
         return res.status(201).json(result);
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        return res.status(400).json({ message: err.message });
     }
 };
 
